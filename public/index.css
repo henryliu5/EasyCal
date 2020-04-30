@@ -1,0 +1,21 @@
+  body {
+    background-color: #57BA98;
+    color: #F2F2F2;
+  }
+
+  * {
+    font-family: verdana;
+  }
+
+  .button {
+    font-size: 16px;
+    background-color: rgba(0, 0, 0, 0);
+    border: 2px solid white;
+    text-align: center;
+    color: #F2F2F2;
+
+  }
+
+  .button:hover {
+    background-color: #4CAF50;
+  }
