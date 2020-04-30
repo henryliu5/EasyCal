@@ -6,7 +6,8 @@
   "author": "Henry Liu",
 
   "icons":{
-    "32": "icon.png"
+    "32": "icon2.png",
+    "128": "icon2.png"
   },
 
   "background": {

@@ -8,13 +8,12 @@
 var startDate;
 var endDate;
 var selectedText;
-var chrono = require('chrono-node');
 
 // Makes API request to upload calendar information
 function submit(eventName) {
-  // Need to switch back to JS date object format
-  startDate = chrono.parseDate(document.getElementById('startDate').getAttribute("value"));
-  endDate = chrono.parseDate(document.getElementById('endDate').getAttribute("value"));
+  // Need to switch back to JS date object format, Date will correctly assume the local time zone
+  startDate = new Date(document.getElementById('startDate').getAttribute("value"));
+  endDate = new Date(document.getElementById('endDate').getAttribute("value"));
   selectedText = eventName;
   console.log(`Event start date: ${startDate}`);
   console.log(`Event end date: ${endDate}`);
@@ -74,7 +73,7 @@ function useToken(token) {
 
 function printResponse(data) {
   console.log(data);
-  document.getElementById('response').innerHTML = JSON.stringify(data, null, 2);
+  //document.getElementById('response').innerHTML = JSON.stringify(data, null, 2);
 }
 
 export default submit;

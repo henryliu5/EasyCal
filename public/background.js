@@ -16,7 +16,8 @@ var rule1 = {
 
 chrome.runtime.onMessage.addListener(
         function(request, sender, sendResponse) {
-            console.log('message received on background');
+            console.log('message received on background: ');
+            console.log(request);
             chrome.runtime.sendMessage(request);
         }
     );

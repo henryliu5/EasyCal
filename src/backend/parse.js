@@ -1,4 +1,6 @@
 /* globals chrome */
+var chrono = require('chrono-node');
+var nlp = require('compromise');
 
 // Gets selection information
 function initParse(){
@@ -9,12 +11,12 @@ function initParse(){
 
 // Callback function for parsing selection information
 function getSelection(selection) {
-  if (selection) {
-    document.getElementById("output").innerHTML = selection[0];
+  if (selection != "") {
+    //document.getElementById("output").innerHTML = selection[0];
     console.log("Selected text:" + selection[0]);
     buildDate(selection[0]);
   } else {
-    // error check to handle if there is no selection
+    // handle if there is no selection
     console.log("no valid selection");
   }
 }
@@ -24,55 +26,45 @@ function buildDate(text) {
   var chronoDate = chrono.parse(text)[0];
   // Check if chrono does not find date
   if (chronoDate) {
-
     // Parse with compromise.js
-    let doc = nlp(text);
-    let entities = doc.topics();
-    console.log(entities);
-    if (entities.list[0]) {
-      console.log(entities.list[0].trim().text());
-      document.getElementById("location").innerHTML = entities.list[0].text();
-    }
+    // let doc = nlp(text);
+    // let entities = doc.topics();
+    // console.log(entities);
+    // if (entities.list[0]) {
+    //   console.log(entities.list[0].trim().text());
+    //   document.getElementById("location").innerHTML = entities.list[0].text();
+    // }
 
     // Update chrono elements
-    console.log(chronoDate);
-    console.log(chronoDate.text);
+    // console.log(chronoDate);
+    // console.log(chronoDate.text);
     let startDate = (chronoDate.start) ? chronoDate.start.date() : "no valid start date";
     // IDEA: Use two passes on selected text, second time remove start text to
     //       check if there are two dates
     let endDate = (chronoDate.end) ? chronoDate.end.date() : startDate;
     console.log("Start: " + chronoDate.start.date());
     console.log("End: " + endDate);
-    document.getElementById("startDate").innerHTML = startDate;
-    document.getElementById("endDate").innerHTML = endDate;
+    //document.getElementById("startDate").innerHTML = startDate;
+    //document.getElementById("endDate").innerHTML = endDate;
 
     // IDEA: set event name description using nlp rather than removing time
-    let eventName = text.replace(chronoDate.text, '');
-    for (entity of entities.list) {
-      console.log('removing ' + entity);
-      eventName = eventName.replace(entity.text(), '');
-    }
-
-    // Parse with Sherlock
-    var parsed = Sherlock.parse(text);
-    console.log('Sherlock:');
-    console.log(parsed);
-    eventName = parsed.eventTitle.toTitleCase();
+    // let eventName = text.replace(chronoDate.text, '');
+    // for (var entity of entities.list) {
+    //   console.log('removing ' + entity);
+    //   eventName = eventName.replace(entity.text(), '');
+    // }
 
     // Set event name using entity from compromise.js
-    document.getElementById("event").innerHTML = eventName;
-    document.getElementById("eventName").value = eventName;
-
-    //sends message to background.js, background.js will send to oauth.js
+    // document.getElementById("event").innerHTML = eventName;
+    // document.getElementById("eventName").value = eventName;
     chrome.runtime.sendMessage({
       msg: "time parsed",
       data: {
         start: startDate,
         end: endDate,
-        selectedText: text
+        selectedText: "test fixed text"
       }
     });
-    console.log('message sent by popup.js');
 
   } else {
     console.log("Date object creation failed: no valid dates found");

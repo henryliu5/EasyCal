@@ -1,3 +1,16 @@
 #submitButton{
     text-transform: uppercase;
 }
+.buttonWrapper{
+    padding-top: 5px;
+    padding-bottom: 10px;
+    text-align: center; 
+}
+
+.text{
+    padding-top: 0px;
+}
+
+.container{
+    background-color:#FFFFFF;
+}
