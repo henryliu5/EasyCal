@@ -68,12 +68,11 @@ function useToken(token) {
       'https://www.googleapis.com/calendar/v3/calendars/' + calendarId + '/events',
       init)
     .then((response) => response.json())
-    .then(printResponse);
+    .then((responseObj) => chrome.runtime.sendMessage({
+      msg: "api response",
+      data: responseObj
+    }));
 }
 
-function printResponse(data) {
-  console.log(data);
-  //document.getElementById('response').innerHTML = JSON.stringify(data, null, 2);
-}
 
 export default submit;

@@ -1,8 +1,10 @@
+/* globals chrome */
 import React from 'react';
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import EventAvailableIcon from '@material-ui/icons/EventAvailable';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import submit from './backend/oauth.js';
 // import DateFnsUtils from '@date-io/date-fns';
 // import {
@@ -18,10 +20,37 @@ class Popup extends React.Component {
         var setStart = props.startDate ? props.startDate : Date();
         var endStart = props.endDate ? props.endDate : Date();
         // If no time prop given, set to current date
-        this.state = { eventName: "", startDate: setStart, endDate: endStart };
+        this.state = {
+            eventName: "",
+            startDate: setStart,
+            endDate: endStart,
+            loading: false,
+            complete: false,
+            msg: null
+        };
 
         // This binding is necessary to make `this` work in the callback
         this.handleClick = this.handleClick.bind(this);
+        this.handleMessage = this.handleMessage.bind(this);
+        this.done = this.done.bind(this);
+    }
+
+    // Add listener when component mounts
+    componentDidMount() {
+        chrome.runtime.onMessage.addListener(this.handleMessage);
+    }
+    // Remove listener when this component unmounts
+    componentWillUnmount() {
+        chrome.runtime.onMessage.removeListener(this.handleMessage);
+    }
+
+
+    handleMessage(request, sender, sendResponse) {
+        if (request.msg == "api response") {
+            console.log("Popup received confirmation");
+            console.log(request.data);
+            this.setState({ complete: true, msg: request.data });
+        }
     }
 
     // Update state when rerender is called in index.js
@@ -35,17 +64,16 @@ class Popup extends React.Component {
 
     // Send API request on click
     handleClick() {
-        var eventName = this.state.eventName;
-        submit(eventName);
+        this.setState({ loading: true })
+        submit(this.state.eventName);
     }
 
     //TODO: Add handleStartChange & handleEndChange which will default to current date/time when state is null
     //      to prevent overlap of label into mm/dd/yy
 
-    render() {
+    main() {
         return (
-            <Container maxWidth="xs" className="container">
-
+            <Container className="container" fixed >
                 <TextField
                     onChange={e => this.setState({ eventName: e.target.value })}
                     id="eventName"
@@ -98,6 +126,33 @@ class Popup extends React.Component {
 
                 {/* <h3>GCal API Response:</h3> */}
             </Container>
+        );
+    }
+
+    loading() {
+        return (
+            <div className="spacer">
+                <span>
+                    <CircularProgress />
+                </span>
+            </div>
+        );
+    }
+
+    done() {
+        console.log(this.state.msg.htmlLink)
+        return (
+            <div className="spacer">
+                <span>
+                    <h1>Your <a href={this.state.msg.htmlLink} target="_blank" rel="noopener noreferrer" >event</a> has been confirmed!</h1>
+                </span>
+            </div>
+        )
+    }
+
+    render() {
+        return (
+            this.state.complete ? this.done() : this.state.loading ? this.loading() : this.main()
         );
     }
 }

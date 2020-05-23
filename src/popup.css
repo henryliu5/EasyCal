@@ -14,3 +14,16 @@
 .container{
     background-color:#FFFFFF;
 }
+
+.spacer{
+    width: 281px;
+    height: 216px;
+    line-height: 216px;
+    text-align: center;
+}
+
+span{
+    display: inline-block;
+    vertical-align: middle;
+    line-height: normal;
+}

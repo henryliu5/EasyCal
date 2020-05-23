@@ -6,6 +6,7 @@ import Popup from './popup';
 import initParse from './backend/parse';
 
 initParse();
+// Must render once in case there is nothing selected
 var defaultStart = toISOLocal(new Date()).slice(0,16);
 var defaultEnd = toISOLocal(new Date()).slice(0,16);
 ReactDOM.render(
@@ -18,7 +19,9 @@ chrome.runtime.onMessage.addListener(
   function (request, sender, sendResponse) {
     //console.log('message received on index: ');
     //console.log(request);
-    rerender(request.data.start, request.data.end)
+    if (request.msg == "time parsed"){
+      rerender(request.data.start, request.data.end)
+    }
   }
 );
 
