@@ -1,13 +1,14 @@
 {
-  "name": "There.",
-  "version": "0.3",
+  "name": "There. - Text to Calendar Events",
+  "version": "0.4",
   "description": "Transform plain text into calendar events",
   "manifest_version": 2,
   "author": "Henry Liu",
 
   "icons":{
-    "32": "icon2.png",
-    "128": "icon2.png"
+    "32": "logo32.png",
+    "96": "logo96.png",
+    "128": "logo128.png"
   },
 
   "background": {
