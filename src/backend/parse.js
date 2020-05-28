@@ -1,9 +1,12 @@
 /* globals chrome */
 var chrono = require('chrono-node');
-var nlp = require('compromise');
+const nlp = require('compromise')
+const nlp_sentences = require('compromise-sentences')
+nlp.default.extend(nlp_sentences.default) 
+
 
 // Gets selection information
-function initParse(){
+function initParse() {
   chrome.tabs.executeScript({
     code: "window.getSelection().toString();"
   }, getSelection);
@@ -23,25 +26,47 @@ function getSelection(selection) {
 function buildDate(text) {
   // Use chrono to parse selected text
   var chronoDate = chrono.parse(text)[0];
+  let startDate = new Date();
+  let endDate = new Date();
+  
   // Check if chrono does not find date
   if (chronoDate) {
-    let startDate = (chronoDate.start) ? chronoDate.start.date() : "no valid start date";
-    let endDate = (chronoDate.end) ? chronoDate.end.date() : startDate;
-    console.log("Start: " + chronoDate.start.date());
-    console.log("End: " + endDate);
-
-    chrome.runtime.sendMessage({
-      msg: "time parsed",
-      data: {
-        start: startDate,
-        end: endDate,
-        selectedText: "test fixed text"
-      }
-    });
-
+    if(chronoDate.start){
+      startDate = chronoDate.start.date();
+    }
+    if(chronoDate.end){
+      endDate = chronoDate.end.date();
+    } 
   } else {
-    console.log("Date object creation failed: no valid dates found");
+    console.log("No valid dates found");
   }
+  if(!chronoDate.end){
+    endDate = new Date(startDate);
+    endDate.setMinutes(startDate.getMinutes() + 30);
+  }
+
+  // CompromiseJS to get topics
+  let doc = nlp.default(text);
+  console.log("Topics: " + doc.topics().json());
+  var subjects = ""
+  try{
+    subjects = doc.sentences().sentences().json()[0].subject.text;
+  } catch{
+    console.log("No subjects found")
+  }
+  
+  console.log("Subjects: " + subjects);
+  console.log("Start: " + startDate);
+  console.log("End: " + endDate);
+
+  chrome.runtime.sendMessage({
+    msg: "time parsed",
+    data: {
+      start: startDate,
+      end: endDate,
+      eventName: subjects
+    }
+  });
 
 }
 

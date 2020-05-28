@@ -20,19 +20,19 @@ chrome.runtime.onMessage.addListener(
     //console.log('message received on index: ');
     //console.log(request);
     if (request.msg == "time parsed"){
-      rerender(request.data.start, request.data.end)
+      rerender(request.data.start, request.data.end, request.data.eventName)
     }
   }
 );
 
 // Rerender the popup when the parsed event info gets back
-function rerender(requestStart, requestEnd){
+function rerender(requestStart, requestEnd, requestName){
   // Request dates will be in ISOString form relative to UTC time
   // Convert back to local time and clip 
   var convertStart = toISOLocal(new Date(requestStart));
   var convertEnd = toISOLocal(new Date(requestEnd));
   ReactDOM.render(
-    <Popup startDate={convertStart.slice(0,16)} endDate={convertEnd.slice(0,16)} />,
+    <Popup startDate={convertStart.slice(0,16)} endDate={convertEnd.slice(0,16)} eventName={requestName}/>,
     document.getElementById('root')
   )
 }

@@ -17,11 +17,12 @@ import './popup.css'
 class Popup extends React.Component {
     constructor(props) {
         super(props);
-        var setStart = props.startDate ? props.startDate : Date();
-        var endStart = props.endDate ? props.endDate : Date();
+        var setStart = props.startDate ? props.startDate : new Date();
+        var endStart = props.endDate ? props.endDate : new Date();
+        var nameStart = props.eventName ? props.eventName : '';
         // If no time prop given, set to current date
         this.state = {
-            eventName: "",
+            eventName: nameStart,
             startDate: setStart,
             endDate: endStart,
             loading: false,
@@ -57,9 +58,10 @@ class Popup extends React.Component {
     componentWillReceiveProps(props) {
         console.log('received props: ');
         console.log(props);
-        var setStart = props.startDate ? props.startDate : Date();
-        var endStart = props.endDate ? props.endDate : Date();
-        this.setState({ eventName: "", startDate: setStart, endDate: endStart })
+        // var setStart = props.startDate ? props.startDate : Date();
+        // var endStart = props.endDate ? props.endDate : Date();
+        // this.setState({ eventName: props.eventName, startDate: setStart, endDate: endStart })
+        this.setState({ eventName: props.eventName, startDate: props.startDate, endDate: props.endDate })
     }
 
     // Send API request on click
@@ -79,7 +81,8 @@ class Popup extends React.Component {
                     id="eventName"
                     label="Event Name"
                     variant="standard"
-                    margin="dense" />
+                    margin="dense"
+                    value={this.state.eventName} />
 
                 {/* TODO: switch to material-ui DateTimePicker */}
                 {/* Make sure to fix time zone */}
@@ -101,22 +104,6 @@ class Popup extends React.Component {
                     onChange={e => this.setState({ endDate: e.target.value })}
                     margin="dense"
                 />
-                {/* <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                    <DateTimePicker
-                        className="text"
-                        value={this.state.startDate}
-                        onChange={e => this.setState({ startDate: e })}
-                        label="Start date"
-                        margin="dense"
-                    />
-                    <DateTimePicker
-                        className="text"
-                        value={this.state.endDate}
-                        onChange={e => this.setState({ endDate: e })}
-                        label="End date"
-                        margin="dense"
-                    />
-                </MuiPickersUtilsProvider> */}
 
                 <div className="buttonWrapper">
                     <Button id="submitButton" color="primary" variant="contained" size="small" endIcon={<EventAvailableIcon />} onClick={this.handleClick}>
@@ -124,7 +111,6 @@ class Popup extends React.Component {
                     </Button>
                 </div>
 
-                {/* <h3>GCal API Response:</h3> */}
             </Container>
         );
     }
@@ -144,7 +130,11 @@ class Popup extends React.Component {
         return (
             <div className="spacer">
                 <span>
-                    <h1>Your <a href={this.state.msg.htmlLink} target="_blank" rel="noopener noreferrer" >event</a> has been confirmed!</h1>
+                    {this.state.msg.status == 'confirmed' ?
+                        <h1>Your <a href={this.state.msg.htmlLink} target="_blank" rel="noopener noreferrer" >event</a> has been confirmed!</h1> :
+                        <h1>Event creation failed! </h1>
+                    }
+
                 </span>
             </div>
         )
