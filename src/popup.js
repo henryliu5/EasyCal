@@ -13,6 +13,7 @@ import submit from './backend/oauth.js';
 // } from '@material-ui/pickers';
 
 import './popup.css'
+require("@gouch/to-title-case");
 
 class Popup extends React.Component {
     constructor(props) {
@@ -61,7 +62,7 @@ class Popup extends React.Component {
         // var setStart = props.startDate ? props.startDate : Date();
         // var endStart = props.endDate ? props.endDate : Date();
         // this.setState({ eventName: props.eventName, startDate: setStart, endDate: endStart })
-        this.setState({ eventName: props.eventName, startDate: props.startDate, endDate: props.endDate })
+        this.setState({ eventName: props.eventName.toTitleCase(), startDate: props.startDate, endDate: props.endDate })
     }
 
     // Send API request on click
