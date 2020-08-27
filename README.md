@@ -1,2 +1,2 @@
-# There.
- Transform plain text into calendar events
+# EasyCal
+ Transform plain text into calendar events with one simple click
