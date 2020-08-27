@@ -49,16 +49,16 @@ class Popup extends React.Component {
 
     handleMessage(request, sender, sendResponse) {
         if (request.msg == "api response") {
-            console.log("Popup received confirmation");
-            console.log(request.data);
+            //console.log("Popup received confirmation");
+            //console.log(request.data);
             this.setState({ complete: true, msg: request.data });
         }
     }
 
     // Update state when rerender is called in index.js
     componentWillReceiveProps(props) {
-        console.log('received props: ');
-        console.log(props);
+        //console.log('received props: ');
+        //console.log(props);
         // var setStart = props.startDate ? props.startDate : Date();
         // var endStart = props.endDate ? props.endDate : Date();
         // this.setState({ eventName: props.eventName, startDate: setStart, endDate: endStart })
@@ -127,7 +127,7 @@ class Popup extends React.Component {
     }
 
     done() {
-        console.log(this.state.msg.htmlLink)
+        //console.log(this.state.msg.htmlLink)
         return (
             <div className="spacer">
                 <span>

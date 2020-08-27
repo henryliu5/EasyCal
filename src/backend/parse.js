@@ -15,11 +15,11 @@ function initParse() {
 // Callback function for parsing selection information
 function getSelection(selection) {
   if (selection != "") {
-    console.log("Selected text:" + selection[0]);
+    // console.log("Selected text:" + selection[0]);
     buildDate(selection[0]);
   } else {
     // handle if there is no selection
-    console.log("no valid selection");
+    // console.log("no valid selection");
   }
 }
 
@@ -38,7 +38,7 @@ function buildDate(text) {
       endDate = chronoDate.end.date();
     } 
   } else {
-    console.log("No valid dates found");
+    // console.log("No valid dates found");
   }
   if(!chronoDate.end){
     endDate = new Date(startDate);
@@ -47,17 +47,17 @@ function buildDate(text) {
 
   // CompromiseJS to get topics
   let doc = nlp.default(text);
-  console.log("Topics: " + doc.topics().json());
+  // console.log("Topics: " + doc.topics().json());
   var subjects = ""
   try{
     subjects = doc.sentences().sentences().json()[0].subject.text;
   } catch{
-    console.log("No subjects found")
+    // console.log("No subjects found")
   }
   
-  console.log("Subjects: " + subjects);
-  console.log("Start: " + startDate);
-  console.log("End: " + endDate);
+  // console.log("Subjects: " + subjects);
+  // console.log("Start: " + startDate);
+  // console.log("End: " + endDate);
 
   chrome.runtime.sendMessage({
     msg: "time parsed",
